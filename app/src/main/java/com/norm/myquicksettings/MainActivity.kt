@@ -1,6 +1,9 @@
 package com.norm.myquicksettings
 
 import android.app.StatusBarManager
+import android.content.ComponentName
+import android.graphics.drawable.Icon
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,11 +23,6 @@ import com.norm.myquicksettings.ui.theme.MyQuickSettingsTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val statusBarManager = applicationContext.getSystemService(
-            StatusBarManager::class.java
-        )
-
         setContent {
             MyQuickSettingsTheme {
                 Surface(
@@ -40,7 +38,24 @@ class MainActivity : ComponentActivity() {
                     ) {
                         Button(
                             onClick = {
-
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                    val statusBarManager = applicationContext.getSystemService(
+                                        StatusBarManager::class.java
+                                    )
+                                    statusBarManager.requestAddTileService(
+                                        ComponentName(
+                                            "com.norm.myquicksettings",
+                                            "com.norm.myquicksettings.MyQSTitleService",
+                                        ),
+                                        "VPN Switcher",
+                                        Icon.createWithResource(
+                                            applicationContext,
+                                            R.drawable.baseline_vpn_key_24
+                                        ),
+                                        {},
+                                        {}
+                                    )
+                                }
                             }
                         ) {
                             Text(
